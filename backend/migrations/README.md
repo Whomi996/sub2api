@@ -1,18 +1,18 @@
-# Database Migrations
+# 数据库迁移
 
 ## Overview
 
-This directory contains SQL migration files for database schema changes. The migration system uses SHA256 checksums to ensure migration immutability and consistency across environments.
+此目录包含用于数据库架构更改的 SQL 迁移文件。迁移系统使用 SHA256 校验和来确保跨环境的迁移不变性和一致性。
 
-## Migration File Naming
+## 迁移文件命名
 
-Format: `NNN_description.sql`
-- `NNN`: Sequential number (e.g., 001, 002, 003)
-- `description`: Brief description in snake_case
+格式：`NNN_description.sql`
+- `NNN`：序列号（例如，001、002、003）
+- `description`：snake_case 中的简要描述
 
-Example: `017_add_gemini_tier_id.sql`
+示例：`017_add_gemini_tier_id.sql`
 
-## Migration File Structure
+## 迁移文件结构
 
 ```sql
 -- +goose Up
@@ -26,31 +26,31 @@ Example: `017_add_gemini_tier_id.sql`
 -- +goose StatementEnd
 ```
 
-## Important Rules
+## 重要规则
 
-### ⚠️ Immutability Principle
+### ⚠️ 不变性原则
 
-**Once a migration is applied to ANY environment (dev, staging, production), it MUST NOT be modified.**
+**一旦将迁移应用于任何环境（开发、登台、生产），就不得对其进行修改。**
 
-Why?
-- Each migration has a SHA256 checksum stored in the `schema_migrations` table
-- Modifying an applied migration causes checksum mismatch errors
-- Different environments would have inconsistent database states
-- Breaks audit trail and reproducibility
+为什么？
+- 每个迁移都有一个 SHA256 校验和存储在 `schema_migrations` 表中
+- 修改已应用的迁移会导致校验和不匹配错误
+- 不同的环境会有不一致的数据库状态
+- 破坏审计追踪和再现性
 
-### ✅ Correct Workflow
+### ✅ 正确的工作流程
 
-1. **Create new migration**
+1. **创建新的迁移**
    ```bash
    # Create new file with next sequential number
    touch migrations/018_your_change.sql
    ```
 
-2. **Write Up and Down migrations**
-   - Up: Apply the change
-   - Down: Revert the change (should be symmetric with Up)
+2. **写入向上和向下迁移**
+- 向上：应用更改
+- 向下：恢复更改（应与向上对称）
 
-3. **Test locally**
+3. **本地测试**
    ```bash
    # Apply migration
    make migrate-up
@@ -59,27 +59,27 @@ Why?
    make migrate-down
    ```
 
-4. **Commit and deploy**
+4. **提交和部署**
    ```bash
    git add migrations/018_your_change.sql
    git commit -m "feat(db): add your change"
    ```
 
-### ❌ What NOT to Do
+### ❌ 不该做什么
 
-- ❌ Modify an already-applied migration file
-- ❌ Delete migration files
-- ❌ Change migration file names
-- ❌ Reorder migration numbers
+- ❌修改已经应用的迁移文件
+- ❌删除迁移文件
+- ❌更改迁移文件名
+- ❌ 重新排序迁移编号
 
-### 🔧 If You Accidentally Modified an Applied Migration
+### 🔧 如果您不小心修改了已应用的迁移
 
-**Error message:**
+**错误信息：**
 ```
 migration 017_add_gemini_tier_id.sql checksum mismatch (db=abc123... file=def456...)
 ```
 
-**Solution:**
+**解决方案：**
 ```bash
 # 1. Find the original version
 git log --oneline -- migrations/017_add_gemini_tier_id.sql
@@ -91,37 +91,37 @@ git checkout <commit-hash> -- migrations/017_add_gemini_tier_id.sql
 touch migrations/018_your_new_change.sql
 ```
 
-## Migration System Details
+## 迁移系统详细信息
 
-- **Checksum Algorithm**: SHA256 of trimmed file content
-- **Tracking Table**: `schema_migrations` (filename, checksum, applied_at)
-- **Runner**: `internal/repository/migrations_runner.go`
-- **Auto-run**: Migrations run automatically on service startup
+- **校验和算法**：修剪文件内容的 SHA256
+- **跟踪表**：`schema_migrations`（文件名、校验和、apply_at）
+- **跑步者**：`internal/repository/migrations_runner.go`
+- **自动运行**：迁移在服务启动时自动运行
 
-## Best Practices
+## 最佳实践
 
-1. **Keep migrations small and focused**
-   - One logical change per migration
-   - Easier to review and rollback
+1. **保持迁移规模小且集中**
+- 每次迁移一个逻辑更改
+- 更容易审查和回滚
 
-2. **Write reversible migrations**
-   - Always provide a working Down migration
-   - Test rollback before committing
+2. **编写可逆迁移**
+- 始终提供有效的向下迁移
+- 提交前测试回滚
 
-3. **Use transactions**
-   - Wrap DDL statements in transactions when possible
-   - Ensures atomicity
+3. **使用交易**
+- 尽可能将 DDL 语句包装在事务中
+- 确保原子性
 
-4. **Add comments**
-   - Explain WHY the change is needed
-   - Document any special considerations
+4. **添加评论**
+- 解释为什么需要改变
+- 记录任何特殊考虑因素
 
-5. **Test in development first**
-   - Apply migration locally
-   - Verify data integrity
-   - Test rollback
+5. **首先在开发中进行测试**
+- 在本地应用迁移
+- 验证数据完整性
+- 测试回滚
 
-## Example Migration
+## 迁移示例
 
 ```sql
 -- +goose Up
@@ -150,12 +150,12 @@ WHERE platform = 'gemini'
 -- +goose StatementEnd
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Checksum Mismatch
-See "If You Accidentally Modified an Applied Migration" above.
+### 校验和不匹配
+请参阅上面的“如果您意外修改了已应用的迁移”。
 
-### Migration Failed
+### 迁移失败
 ```bash
 # Check migration status
 psql -d sub2api -c "SELECT * FROM schema_migrations ORDER BY applied_at DESC;"
@@ -164,7 +164,7 @@ psql -d sub2api -c "SELECT * FROM schema_migrations ORDER BY applied_at DESC;"
 # Better to fix the migration and create a new one
 ```
 
-### Need to Skip a Migration (Emergency Only)
+### 需要跳过迁移（仅限紧急情况）
 ```sql
 -- DANGEROUS: Only use in development or with extreme caution
 INSERT INTO schema_migrations (filename, checksum, applied_at)
@@ -173,6 +173,6 @@ VALUES ('NNN_migration.sql', 'calculated_checksum', NOW());
 
 ## References
 
-- Migration runner: `internal/repository/migrations_runner.go`
-- Goose syntax: https://github.com/pressly/goose
-- PostgreSQL docs: https://www.postgresql.org/docs/
+- 迁移运行程序：`internal/repository/migrations_runner.go`
+- Goose 语法：https://github.com/pressly/goose
+- PostgreSQL 文档：https://www.postgresql.org/docs/

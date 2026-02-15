@@ -1,34 +1,34 @@
-# Sub2API Deployment Files
+# Sub2API 部署文件
 
-This directory contains files for deploying Sub2API on Linux servers.
+该目录包含用于在 Linux 服务器上部署 Sub2API 的文件。
 
-## Deployment Methods
+## 部署方法
 
-| Method | Best For | Setup Wizard |
+|方法|最适合 |设置向导 |
 |--------|----------|--------------|
-| **Docker Compose** | Quick setup, all-in-one | Not needed (auto-setup) |
-| **Binary Install** | Production servers, systemd | Web-based wizard |
+| **Docker 撰写** |快速设置，一体化 |不需要（自动设置）|
+| **二进制安装** |生产服务器，systemd |基于网络的向导 |
 
-## Files
+## 文件
 
-| File | Description |
+|文件 |描述 |
 |------|-------------|
-| `docker-compose.yml` | Docker Compose configuration (named volumes) |
-| `docker-compose.local.yml` | Docker Compose configuration (local directories, easy migration) |
-| `docker-deploy.sh` | **One-click Docker deployment script (recommended)** |
-| `.env.example` | Docker environment variables template |
-| `DOCKER.md` | Docker Hub documentation |
-| `install.sh` | One-click binary installation script |
-| `sub2api.service` | Systemd service unit file |
-| `config.example.yaml` | Example configuration file |
+| `docker-compose.yml` | Docker Compose 配置（命名卷）|
+| `docker-compose.local.yml` | Docker Compose配置（本地目录，轻松迁移）|
+| `docker-deploy.sh` | **一键Docker部署脚本（推荐）** |
+| `.env.example` | Docker环境变量模板|
+| `DOCKER.md` | Docker Hub 文档 |
+| `install.sh` |一键二进制安装脚本 |
+| `sub2api.service` | Systemd 服务单元文件 |
+| `config.example.yaml` |配置文件示例 |
 
 ---
 
-## Docker Deployment (Recommended)
+## Docker 部署（推荐）
 
-### Method 1: One-Click Deployment (Recommended)
+### 方法一：一键部署（推荐）
 
-Use the automated preparation script for the easiest setup:
+使用自动准备脚本进行最简单的设置：
 
 ```bash
 # Download and run the preparation script
@@ -40,14 +40,14 @@ chmod +x docker-deploy.sh
 ./docker-deploy.sh
 ```
 
-**What the script does:**
-- Downloads `docker-compose.local.yml` and `.env.example`
-- Automatically generates secure secrets (JWT_SECRET, TOTP_ENCRYPTION_KEY, POSTGRES_PASSWORD)
-- Creates `.env` file with generated secrets
-- Creates necessary data directories (data/, postgres_data/, redis_data/)
-- **Displays generated credentials** (POSTGRES_PASSWORD, JWT_SECRET, etc.)
+**脚本的作用：**
+- 下载 `docker-compose.local.yml` 和 `.env.example`
+- 自动生成安全秘密（JWT_SECRET、TOTP_ENCRYPTION_KEY、POSTGRES_PASSWORD）
+- 使用生成的机密创建 `.env` 文件
+- 创建必要的数据目录（data/、postgres_data/、redis_data/）
+- **显示生成的凭据**（POSTGRES_PASSWORD、JWT_SECRET 等）
 
-**After running the script:**
+**运行脚本后：**
 ```bash
 # Start services
 docker-compose -f docker-compose.local.yml up -d
@@ -62,9 +62,9 @@ docker-compose -f docker-compose.local.yml logs sub2api | grep "admin password"
 # http://localhost:8080
 ```
 
-### Method 2: Manual Deployment
+### 方法二：手动部署
 
-If you prefer manual control:
+如果您喜欢手动控制：
 
 ```bash
 # Clone repository
@@ -94,44 +94,44 @@ docker-compose -f docker-compose.local.yml logs -f sub2api
 # http://localhost:8080
 ```
 
-### Deployment Version Comparison
+### 部署版本比较
 
-| Version | Data Storage | Migration | Best For |
+|版本 |数据存储|移民|最适合 |
 |---------|-------------|-----------|----------|
-| **docker-compose.local.yml** | Local directories (./data, ./postgres_data, ./redis_data) | ✅ Easy (tar entire directory) | Production, need frequent backups/migration |
-| **docker-compose.yml** | Named volumes (/var/lib/docker/volumes/) | ⚠️ Requires docker commands | Simple setup, don't need migration |
+| **docker-compose.local.yml** |本地目录（./data、./postgres_data、./redis_data）| ✅ 简单（tar 整个目录）|生产，需要频繁备份/迁移 |
+| **docker-compose.yml** |命名卷 (/var/lib/docker/volumes/) | ⚠️ 需要 docker 命令 |设置简单，无需迁移 |
 
-**Recommendation:** Use `docker-compose.local.yml` (deployed by `docker-deploy.sh`) for easier data management and migration.
+**建议：** 使用`docker-compose.local.yml`（由`docker-deploy.sh`部署）以更轻松地进行数据管理和迁移。
 
-### How Auto-Setup Works
+### 自动设置如何工作
 
-When using Docker Compose with `AUTO_SETUP=true`:
+当使用带有 `AUTO_SETUP=true` 的 Docker Compose 时：
 
-1. On first run, the system automatically:
-   - Connects to PostgreSQL and Redis
-   - Applies database migrations (SQL files in `backend/migrations/*.sql`) and records them in `schema_migrations`
-   - Generates JWT secret (if not provided)
-   - Creates admin account (password auto-generated if not provided)
-   - Writes config.yaml
+1. 首次运行时，系统自动：
+- 连接到 PostgreSQL 和 Redis
+- 应用数据库迁移（`backend/migrations/*.sql` 中的 SQL 文件）并将其记录在 `schema_migrations` 中
+- 生成 JWT 秘密（如果未提供）
+- 创建管理员帐户（如果未提供则自动生成密码）
+- 写入config.yaml
 
-2. No manual Setup Wizard needed - just configure `.env` and start
+2. 无需手动设置向导 - 只需配置 `.env` 并启动
 
-3. If `ADMIN_PASSWORD` is not set, check logs for the generated password:
+3. 如果未设置 `ADMIN_PASSWORD`，请检查日志中是否有生成的密码：
    ```bash
    docker-compose logs sub2api | grep "admin password"
    ```
 
-### Database Migration Notes (PostgreSQL)
+### 数据库迁移笔记（PostgreSQL）
 
-- Migrations are applied in lexicographic order (e.g. `001_...sql`, `002_...sql`).
-- `schema_migrations` tracks applied migrations (filename + checksum).
-- Migrations are forward-only; rollback requires a DB backup restore or a manual compensating SQL script.
+- 迁移按字典顺序应用（例如 `001_...sql`、`002_...sql`）。
+- `schema_migrations` 跟踪应用的迁移（文件名+校验和）。
+- 迁移是向前的；回滚需要数据库备份恢复或手动补偿SQL脚本。
 
-**Verify `users.allowed_groups` → `user_allowed_groups` backfill**
+**验证 `users.allowed_groups` → `user_allowed_groups` 回填**
 
-During the incremental GORM→Ent migration, `users.allowed_groups` (legacy `BIGINT[]`) is being replaced by a normalized join table `user_allowed_groups(user_id, group_id)`.
+在增量 GORM→Ent 迁移期间，`users.allowed_groups`（旧版 `BIGINT[]`）被规范化连接表 `user_allowed_groups(user_id, group_id)` 替换。
 
-Run this query to compare the legacy data vs the join table:
+运行此查询来比较旧数据与连接表：
 
 ```sql
 WITH old_pairs AS (
@@ -145,9 +145,9 @@ SELECT
   (SELECT COUNT(*) FROM user_allowed_groups) AS new_pair_count;
 ```
 
-### Commands
+### 命令
 
-For **local directory version** (docker-compose.local.yml):
+对于**本地目录版本**（docker-compose.local.yml）：
 
 ```bash
 # Start services
@@ -171,7 +171,7 @@ docker-compose -f docker-compose.local.yml down
 rm -rf data/ postgres_data/ redis_data/
 ```
 
-For **named volumes version** (docker-compose.yml):
+对于 **命名卷版本** (docker-compose.yml)：
 
 ```bash
 # Start services
@@ -194,29 +194,29 @@ docker-compose up -d
 docker-compose down -v
 ```
 
-### Environment Variables
+### 环境变量
 
-| Variable | Required | Default | Description |
+|变量|必填|默认 |描述 |
 |----------|----------|---------|-------------|
-| `POSTGRES_PASSWORD` | **Yes** | - | PostgreSQL password |
-| `JWT_SECRET` | **Recommended** | *(auto-generated)* | JWT secret (fixed for persistent sessions) |
-| `TOTP_ENCRYPTION_KEY` | **Recommended** | *(auto-generated)* | TOTP encryption key (fixed for persistent 2FA) |
-| `SERVER_PORT` | No | `8080` | Server port |
-| `ADMIN_EMAIL` | No | `admin@sub2api.local` | Admin email |
-| `ADMIN_PASSWORD` | No | *(auto-generated)* | Admin password |
-| `TZ` | No | `Asia/Shanghai` | Timezone |
-| `GEMINI_OAUTH_CLIENT_ID` | No | *(builtin)* | Google OAuth client ID (Gemini OAuth). Leave empty to use the built-in Gemini CLI client. |
-| `GEMINI_OAUTH_CLIENT_SECRET` | No | *(builtin)* | Google OAuth client secret (Gemini OAuth). Leave empty to use the built-in Gemini CLI client. |
-| `GEMINI_OAUTH_SCOPES` | No | *(default)* | OAuth scopes (Gemini OAuth) |
-| `GEMINI_QUOTA_POLICY` | No | *(empty)* | JSON overrides for Gemini local quota simulation (Code Assist only). |
+| `POSTGRES_PASSWORD` | **是** | - | PostgreSQL 密码 |
+| `JWT_SECRET` | **推荐** | *（自动生成）* | JWT 秘密（针对持久会话进行了修复）|
+| `TOTP_ENCRYPTION_KEY` | **推荐** | *（自动生成）* | TOTP 加密密钥（针对持久 2FA 进行了修复）|
+| `SERVER_PORT` |没有 | `8080` |服务器端口|
+| `ADMIN_EMAIL` |没有 | `admin@sub2api.local` |管理员邮箱|
+| `ADMIN_PASSWORD` |没有 | *（自动生成）* |管理员密码 |
+| `TZ` |没有 | `Asia/Shanghai` |时区 |
+| `GEMINI_OAUTH_CLIENT_ID` |没有 | *（内置）* | Google OAuth 客户端 ID (Gemini OAuth)。留空以使用内置 Gemini CLI 客户端。 |
+| `GEMINI_OAUTH_CLIENT_SECRET` |没有 | *（内置）* | Google OAuth 客户端密钥（Gemini OAuth）。留空以使用内置 Gemini CLI 客户端。 |
+| `GEMINI_OAUTH_SCOPES` |没有 | *（默认）* | OAuth 范围 (Gemini OAuth) |
+| `GEMINI_QUOTA_POLICY` |没有 | *（空）* |用于 Gemini 本地配额模拟的 JSON 覆盖（仅限 Code Assist）。 |
 
-See `.env.example` for all available options.
+请参阅 `.env.example` 了解所有可用选项。
 
-> **Note:** The `docker-deploy.sh` script automatically generates `JWT_SECRET`, `TOTP_ENCRYPTION_KEY`, and `POSTGRES_PASSWORD` for you.
+> **注意：** `docker-deploy.sh` 脚本会自动为您生成 `JWT_SECRET`、`TOTP_ENCRYPTION_KEY` 和 `POSTGRES_PASSWORD`。
 
-### Easy Migration (Local Directory Version)
+### 轻松迁移（本地目录版本）
 
-When using `docker-compose.local.yml`, all data is stored in local directories, making migration simple:
+当使用 `docker-compose.local.yml` 时，所有数据都存储在本地目录中，使迁移变得简单：
 
 ```bash
 # On source server: Stop services and create archive
@@ -234,127 +234,127 @@ cd deployment/
 docker-compose -f docker-compose.local.yml up -d
 ```
 
-Your entire deployment (configuration + data) is migrated!
+您的整个部署（配置+数据）已迁移！
 
 ---
 
-## Gemini OAuth Configuration
+## Gemini OAuth 配置
 
-Sub2API supports three methods to connect to Gemini:
+Sub2API 支持三种连接 Gemini 的方法：
 
-### Method 1: Code Assist OAuth (Recommended for GCP Users)
+### 方法 1：Code Assist OAuth（推荐给 GCP 用户）
 
-**No configuration needed** - always uses the built-in Gemini CLI OAuth client (public).
+**无需配置** - 始终使用内置的 Gemini CLI OAuth 客户端（公共）。
 
-1. Leave `GEMINI_OAUTH_CLIENT_ID` and `GEMINI_OAUTH_CLIENT_SECRET` empty
-2. In the Admin UI, create a Gemini OAuth account and select **"Code Assist"** type
-3. Complete the OAuth flow in your browser
+1. 将 `GEMINI_OAUTH_CLIENT_ID` 和 `GEMINI_OAUTH_CLIENT_SECRET` 留空
+2. 在管理 UI 中，创建一个 Gemini OAuth 帐户并选择 **“Code Assist”** 类型
+3. 在浏览器中完成 OAuth 流程
 
-> Note: Even if you configure `GEMINI_OAUTH_CLIENT_ID` / `GEMINI_OAUTH_CLIENT_SECRET` for AI Studio OAuth,
-> Code Assist OAuth will still use the built-in Gemini CLI client.
+> 注意：即使您为 AI Studio OAuth 配置了 `GEMINI_OAUTH_CLIENT_ID` / `GEMINI_OAUTH_CLIENT_SECRET`，
+> Code Assist OAuth 仍将使用内置的 Gemini CLI 客户端。
 
-**Requirements:**
-- Google account with access to Google Cloud Platform
-- A GCP project (auto-detected or manually specified)
+**要求：**
+- 可访问 Google Cloud Platform 的 Google 帐户
+- GCP项目（自动检测或手动指定）
 
-**How to get Project ID (if auto-detection fails):**
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Click the project dropdown at the top of the page
-3. Copy the Project ID (not the project name) from the list
-4. Common formats: `my-project-123456` or `cloud-ai-companion-xxxxx`
+**如何获取项目ID（如果自动检测失败）：**
+1. 前往[Google Cloud Console](https://console.cloud.google.com/)
+2. 单击页面顶部的项目下拉列表
+3. 从列表中复制项目 ID（不是项目名称）
+4. 常用格式：`my-project-123456` 或 `cloud-ai-companion-xxxxx`
 
-### Method 2: AI Studio OAuth (For Regular Google Accounts)
+### 方法 2：AI Studio OAuth（适用于常规 Google 帐户）
 
-Requires your own OAuth client credentials.
+需要您自己的 OAuth 客户端凭据。
 
-**Step 1: Create OAuth Client in Google Cloud Console**
+**步骤 1：在 Google Cloud Console 中创建 OAuth 客户端**
 
-1. Go to [Google Cloud Console - Credentials](https://console.cloud.google.com/apis/credentials)
-2. Create a new project or select an existing one
-3. **Enable the Generative Language API:**
-   - Go to "APIs & Services" → "Library"
-   - Search for "Generative Language API"
-   - Click "Enable"
-4. **Configure OAuth Consent Screen** (if not done):
-   - Go to "APIs & Services" → "OAuth consent screen"
-   - Choose "External" user type
-   - Fill in app name, user support email, developer contact
-   - Add scopes: `https://www.googleapis.com/auth/generative-language.retriever` (and optionally `https://www.googleapis.com/auth/cloud-platform`)
-   - Add test users (your Google account email)
-5. **Create OAuth 2.0 credentials:**
-   - Go to "APIs & Services" → "Credentials"
-   - Click "Create Credentials" → "OAuth client ID"
-   - Application type: **Web application** (or **Desktop app**)
-   - Name: e.g., "Sub2API Gemini"
-   - Authorized redirect URIs: Add `http://localhost:1455/auth/callback`
-6. Copy the **Client ID** and **Client Secret**
-7. **⚠️ Publish to Production (IMPORTANT):**
-   - Go to "APIs & Services" → "OAuth consent screen"
-   - Click "PUBLISH APP" to move from Testing to Production
-   - **Testing mode limitations:**
-     - Only manually added test users can authenticate (max 100 users)
-     - Refresh tokens expire after 7 days
-     - Users must be re-added periodically
-   - **Production mode:** Any Google user can authenticate, tokens don't expire
-   - Note: For sensitive scopes, Google may require verification (demo video, privacy policy)
+1. 前往[Google Cloud Console - Credentials](https://console.cloud.google.com/apis/credentials)
+2. 创建一个新项目或选择现有项目
+3. **启用生成语言API：**
+- 转到“API 和服务”→“库”
+- 搜索“生成语言 API”
+- 单击“启用”
+4. **配置 OAuth 同意屏幕**（如果未完成）：
+- 转到“API 和服务”→“OAuth 同意屏幕”
+- 选择“外部”用户类型
+- 填写应用名称、用户支持电子邮件、开发者联系方式
+- 添加范围：`https://www.googleapis.com/auth/generative-language.retriever`（以及可选的 `https://www.googleapis.com/auth/cloud-platform`）
+- 添加测试用户（您的Google帐户电子邮件）
+5. **创建 OAuth 2.0 凭据：**
+- 转到“API 和服务”→“凭据”
+- 单击“创建凭据”→“OAuth 客户端 ID”
+- 应用程序类型：**Web 应用程序**（或 **桌面应用程序**）
+- 名称：例如“Sub2API Gemini”
+- 授权重定向 URI：添加 `http://localhost:1455/auth/callback`
+6. 复制 **客户端 ID** 和 **客户端密钥**
+7. **⚠️ 发布到生产环境（重要）：**
+- 转到“API 和服务”→“OAuth 同意屏幕”
+- 单击“发布应用程序”从测试转移到生产
+- **测试模​​式限制：**
+- 只有手动添加的测试用户才能进行身份验证（最多 100 个用户）
+- 刷新令牌将在 7 天后过期
+- 必须定期重新添加用户
+- **生产模式：**任何Google用户都可以进行身份​​验证，令牌不会过期
+- 注意：对于敏感范围，Google 可能需要验证（演示视频、隐私政策）
 
-**Step 2: Configure Environment Variables**
+**步骤2：配置环境变量**
 
 ```bash
 GEMINI_OAUTH_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GEMINI_OAUTH_CLIENT_SECRET=GOCSPX-your-client-secret
 ```
 
-**Step 3: Create Account in Admin UI**
+**第 3 步：在管理 UI 中创建帐户**
 
-1. Create a Gemini OAuth account and select **"AI Studio"** type
-2. Complete the OAuth flow
-   - After consent, your browser will be redirected to `http://localhost:1455/auth/callback?code=...&state=...`
-   - Copy the full callback URL (recommended) or just the `code` and paste it back into the Admin UI
+1.创建Gemini OAuth账户并选择**“AI Studio”**类型
+2. 完成OAuth流程
+- 同意后，您的浏览器将被重定向到`http://localhost:1455/auth/callback?code=...&state=...`
+- 复制完整的回调 URL（推荐）或仅复制 `code` 并将其粘贴回管理 UI
 
-### Method 3: API Key (Simplest)
+### 方法 3：API 密钥（最简单）
 
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Click "Create API key"
-3. In Admin UI, create a Gemini **API Key** account
-4. Paste your API key (starts with `AIza...`)
+1. 前往[Google AI Studio](https://aistudio.google.com/app/apikey)
+2. 点击“创建API密钥”
+3. 在管理界面中，创建一个 Gemini **API Key** 帐户
+4. 粘贴​​您的 API 密钥（以 `AIza...` 开头）
 
-### Comparison Table
+### 比较表
 
-| Feature | Code Assist OAuth | AI Studio OAuth | API Key |
+|特色 |代码辅助 OAuth | AI Studio OAuth | API 密钥 |
 |---------|-------------------|-----------------|---------|
-| Setup Complexity | Easy (no config) | Medium (OAuth client) | Easy |
-| GCP Project Required | Yes | No | No |
-| Custom OAuth Client | No (built-in) | Yes (required) | N/A |
-| Rate Limits | GCP quota | Standard | Standard |
-| Best For | GCP developers | Regular users needing OAuth | Quick testing |
+|设置复杂性 |简单（无需配置）|中（OAuth 客户端）|简单|
+|需要 GCP 项目 |是的 |没有 |没有 |
+|自定义 OAuth 客户端 |否（内置）|是（必填）|不适用 |
+|速率限制 | GCP 配额 |标准|标准|
+|最适合 | GCP 开发者 |需要 OAuth 的普通用户 |快速测试 |
 
 ---
 
-## Binary Installation
+## 二进制安装
 
-For production servers using systemd.
+对于使用 systemd 的生产服务器。
 
-### One-Line Installation
+### 一行安装
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/Wei-Shaw/sub2api/main/deploy/install.sh | sudo bash
 ```
 
-### Manual Installation
+### 手动安装
 
-1. Download the latest release from [GitHub Releases](https://github.com/Wei-Shaw/sub2api/releases)
-2. Extract and copy the binary to `/opt/sub2api/`
-3. Copy `sub2api.service` to `/etc/systemd/system/`
-4. Run:
+1. 从[GitHub Releases](https://github.com/Wei-Shaw/sub2api/releases)下载最新版本
+2. 提取二进制文件并将其复制到 `/opt/sub2api/`
+3. 将 `sub2api.service` 复制到 `/etc/systemd/system/`
+4. 运行：
    ```bash
    sudo systemctl daemon-reload
    sudo systemctl enable sub2api
    sudo systemctl start sub2api
    ```
-5. Open the Setup Wizard in your browser to complete configuration
+5. 在浏览器中打开设置向导完成配置
 
-### Commands
+### 命令
 
 ```bash
 # Install
@@ -367,7 +367,7 @@ sudo ./install.sh upgrade
 sudo ./install.sh uninstall
 ```
 
-### Service Management
+### 服务管理
 
 ```bash
 # Start the service
@@ -391,66 +391,66 @@ sudo systemctl enable sub2api
 
 ### Configuration
 
-#### Server Address and Port
+#### 服务器地址和端口
 
-During installation, you will be prompted to configure the server listen address and port. These settings are stored in the systemd service file as environment variables.
+安装过程中会提示配置服务器监听地址和端口。这些设置作为环境变量存储在 systemd 服务文件中。
 
-To change after installation:
+安装后更改：
 
-1. Edit the systemd service:
+1.编辑systemd服务：
    ```bash
    sudo systemctl edit sub2api
    ```
 
-2. Add or modify:
+2.添加或修改：
    ```ini
    [Service]
    Environment=SERVER_HOST=0.0.0.0
    Environment=SERVER_PORT=3000
    ```
 
-3. Reload and restart:
+3. 重新加载并重启：
    ```bash
    sudo systemctl daemon-reload
    sudo systemctl restart sub2api
    ```
 
-#### Gemini OAuth Configuration
+#### Gemini OAuth 配置
 
-If you need to use AI Studio OAuth for Gemini accounts, add the OAuth client credentials to the systemd service file:
+如果您需要对 Gemini 帐户使用 AI Studio OAuth，请将 OAuth 客户端凭据添加到 systemd 服务文件中：
 
-1. Edit the service file:
+1.编辑服务文件：
    ```bash
    sudo nano /etc/systemd/system/sub2api.service
    ```
 
-2. Add your OAuth credentials in the `[Service]` section (after the existing `Environment=` lines):
+2. 在 `[Service]` 部分添加您的 OAuth 凭据（在现有 `Environment=` 行之后）：
    ```ini
    Environment=GEMINI_OAUTH_CLIENT_ID=your-client-id.apps.googleusercontent.com
    Environment=GEMINI_OAUTH_CLIENT_SECRET=GOCSPX-your-client-secret
    ```
 
-3. Reload and restart:
+3. 重新加载并重启：
    ```bash
    sudo systemctl daemon-reload
    sudo systemctl restart sub2api
    ```
 
-> **Note:** Code Assist OAuth does not require any configuration - it uses the built-in Gemini CLI client.
-> See the [Gemini OAuth Configuration](#gemini-oauth-configuration) section above for detailed setup instructions.
+> **注意：** Code Assist OAuth 不需要任何配置 - 它使用内置的 Gemini CLI 客户端。
+> 有关详细设置说明，请参阅上面的 [Gemini OAuth Configuration](#gemini-oauth-configuration) 部分。
 
-#### Application Configuration
+#### 应用程序配置
 
-The main config file is at `/etc/sub2api/config.yaml` (created by Setup Wizard).
+主配置文件位于 `/etc/sub2api/config.yaml`（由安装向导创建）。
 
-### Prerequisites
+### 先决条件
 
-- Linux server (Ubuntu 20.04+, Debian 11+, CentOS 8+, etc.)
+- Linux 服务器（Ubuntu 20.04+、Debian 11+、CentOS 8+ 等）
 - PostgreSQL 14+
-- Redis 6+
-- systemd
+- 雷迪斯 6+
+- 系统
 
-### Directory Structure
+### 目录结构
 
 ```
 /opt/sub2api/
@@ -464,11 +464,11 @@ The main config file is at `/etc/sub2api/config.yaml` (created by Setup Wizard).
 
 ---
 
-## Troubleshooting
+## 故障排除
 
-### Docker
+### 码头工人
 
-For **local directory version**:
+对于**本地目录版本**：
 
 ```bash
 # Check container status
@@ -490,7 +490,7 @@ docker-compose -f docker-compose.local.yml restart
 ls -la data/ postgres_data/ redis_data/
 ```
 
-For **named volumes version**:
+对于**命名卷版本**：
 
 ```bash
 # Check container status
@@ -509,7 +509,7 @@ docker-compose exec redis redis-cli ping
 docker-compose restart
 ```
 
-### Binary Install
+### 二进制安装
 
 ```bash
 # Check service status
@@ -528,27 +528,27 @@ sudo systemctl status postgresql
 sudo systemctl status redis
 ```
 
-### Common Issues
+### 常见问题
 
-1. **Port already in use**: Change `SERVER_PORT` in `.env` or systemd config
-2. **Database connection failed**: Check PostgreSQL is running and credentials are correct
-3. **Redis connection failed**: Check Redis is running and password is correct
-4. **Permission denied**: Ensure proper file ownership for binary install
+1. **端口已在使用**：更改 `.env` 或 systemd 配置中的 `SERVER_PORT`
+2. **数据库连接失败**：检查 PostgreSQL 是否正在运行并且凭据是否正确
+3. **Redis连接失败**：检查Redis是否正在运行且密码是否正确
+4. **权限被拒绝**：确保二进制安装的正确文件所有权
 
 ---
 
-## TLS Fingerprint Configuration
+## TLS 指纹配置
 
-Sub2API supports TLS fingerprint simulation to make requests appear as if they come from the official Claude CLI (Node.js client).
+Sub2API 支持 TLS 指纹模拟，使请求看起来就像来自官方 Claude CLI（Node.js 客户端）。
 
-> **💡 Tip:** Visit **[tls.sub2api.org](https://tls.sub2api.org/)** to get TLS fingerprint information for different devices and browsers.
+> **💡提示：**访问**[tls.sub2api.org](https://tls.sub2api.org/)**可获取不同设备和浏览器的TLS指纹信息。
 
-### Default Behavior
+### 默认行为
 
-- Built-in `claude_cli_v2` profile simulates Node.js 20.x + OpenSSL 3.x
-- JA3 Hash: `1a28e69016765d92e3b381168d68922c`
-- JA4: `t13d5911h1_a33745022dd6_1f22a2ca17c4`
-- Profile selection: `accountID % profileCount`
+- 内置 `claude_cli_v2` 配置文件模拟 Node.js 20.x + OpenSSL 3.x
+- JA3 哈希值：`1a28e69016765d92e3b381168d68922c`
+- JA4：`t13d5911h1_a33745022dd6_1f22a2ca17c4`
+- 配置文件选择：`accountID % profileCount`
 
 ### Configuration
 
@@ -575,19 +575,19 @@ gateway:
         curves: [29, 23, 24, 25]
 ```
 
-### Profile Fields
+### 配置文件字段
 
-| Field | Type | Description |
+|领域|类型 |描述 |
 |-------|------|-------------|
-| `name` | string | Display name (required) |
-| `cipher_suites` | []uint16 | Cipher suites in decimal. Empty = default |
-| `curves` | []uint16 | Elliptic curves in decimal. Empty = default |
-| `point_formats` | []uint8 | EC point formats. Empty = default |
+| `name` |字符串|显示名称（必填）|
+| `cipher_suites` | []uint16 |十进制密码套件。空=默认|
+| `curves` | []uint16 |十进制椭圆曲线。空=默认|
+| `point_formats` | []uint8 | EC 点格式。空=默认|
 
-### Common Values Reference
+### 通用值参考
 
-**Cipher Suites (TLS 1.3):** `4865` (AES_128_GCM), `4866` (AES_256_GCM), `4867` (CHACHA20)
+**密码套件 (TLS 1.3)：** `4865` (AES_128_GCM)、`4866` (AES_256_GCM)、`4867` (CHACHA20)
 
-**Cipher Suites (TLS 1.2):** `49195`, `49196`, `49199`, `49200` (ECDHE variants)
+**密码套件 (TLS 1.2)：** `49195`、`49196`、`49199`、`49200`（ECDHE 变体）
 
-**Curves:** `29` (X25519), `23` (P-256), `24` (P-384), `25` (P-521)
+**曲线：** `29` (X25519)、`23` (P-256)、`24` (P-384)、`25` (P-521)

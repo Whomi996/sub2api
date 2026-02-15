@@ -43,7 +43,7 @@ npm install -g pnpm
 
 ## 三、CI/CD 流水线
 
-### GitHub Actions Workflows
+### GitHub Actions 工作流程
 
 | Workflow | 触发条件 | 检查内容 |
 |----------|----------|----------|

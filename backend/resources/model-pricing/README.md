@@ -1,37 +1,37 @@
-# Model Pricing Data
+# 型号定价数据
 
-This directory contains a local copy of the mirrored model pricing data as a fallback mechanism.
+此目录包含镜像模型定价数据的本地副本作为后备机制。
 
 ## Source
-The original file is maintained by the LiteLLM project and mirrored into the `price-mirror` branch of this repository via GitHub Actions:
-- Mirror branch (configurable via `PRICE_MIRROR_REPO`): https://raw.githubusercontent.com/<your-repo>/price-mirror/model_prices_and_context_window.json
-- Upstream source: https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json
+原始文件由 LiteLLM 项目维护，并通过 GitHub Actions 镜像到此存储库的 `price-mirror` 分支：
+- 镜像分支（可通过 `PRICE_MIRROR_REPO` 配置）：https://raw.githubusercontent.com/<your-repo>/price-mirror/model_prices_and_context_window.json
+- 上游来源：https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json
 
 ## Purpose
-This local copy serves as a fallback when the remote file cannot be downloaded due to:
-- Network restrictions
-- Firewall rules
-- DNS resolution issues
-- GitHub being blocked in certain regions
-- Docker container network limitations
+当由于以下原因无法下载远程文件时，此本地副本可作为后备：
+- 网络限制
+- 防火墙规则
+- DNS解析问题
+- GitHub 在某些地区被屏蔽
+- Docker容器网络限制
 
-## Update Process
-The pricingService will:
-1. First attempt to download the latest version from GitHub
-2. If download fails, use this local copy as fallback
-3. Log a warning when using the fallback file
+## 更新过程
+定价服务将：
+1.首先尝试从GitHub下载最新版本
+2. 如果下载失败，请使用此本地副本作为后备
+3. 使用后备文件时记录警告
 
-## Manual Update
-To manually update this file with the latest pricing data (if automation is unavailable):
+## 手动更新
+要使用最新的定价数据手动更新此文件（如果自动化不可用）：
 ```bash
 curl -s https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json -o model_prices_and_context_window.json
 ```
 
-## File Format
-The file contains JSON data with model pricing information including:
-- Model names and identifiers
-- Input/output token costs
-- Context window sizes
-- Model capabilities
+## 文件格式
+该文件包含带有模型定价信息的 JSON 数据，包括：
+- 型号名称和标识符
+- 输入/输出代币成本
+- 上下文窗口大小
+- 模型能力
 
-Last updated: 2025-08-10
+最后更新: 2025-08-10

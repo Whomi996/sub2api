@@ -1,8 +1,8 @@
-# Sub2API Docker Image
+# Sub2API Docker 镜像
 
-Sub2API is an AI API Gateway Platform for distributing and managing AI product subscription API quotas.
+Sub2API是一个AI API网关平台，用于分配和管理AI产品订阅API配额。
 
-## Quick Start
+## 快速入门
 
 ```bash
 docker run -d \
@@ -13,7 +13,7 @@ docker run -d \
   weishaw/sub2api:latest
 ```
 
-## Docker Compose
+## Docker 组合
 
 ```yaml
 version: '3.8'
@@ -49,28 +49,28 @@ volumes:
   redis_data:
 ```
 
-## Environment Variables
+## 环境变量
 
-| Variable | Description | Required | Default |
+|变量|描述 |必填|默认 |
 |----------|-------------|----------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes | - |
-| `REDIS_URL` | Redis connection string | Yes | - |
-| `PORT` | Server port | No | `8080` |
-| `GIN_MODE` | Gin framework mode (`debug`/`release`) | No | `release` |
+| `DATABASE_URL` | PostgreSQL 连接字符串 |是的 | - |
+| `REDIS_URL` | Redis 连接字符串 |是的 | - |
+| `PORT` |服务器端口|没有 | `8080` |
+| `GIN_MODE` | Gin 框架模式 (`debug`/`release`) |没有 | `release` |
 
-## Supported Architectures
+## 支持的架构
 
 - `linux/amd64`
 - `linux/arm64`
 
-## Tags
+## 标签
 
-- `latest` - Latest stable release
-- `x.y.z` - Specific version
-- `x.y` - Latest patch of minor version
-- `x` - Latest minor of major version
+- `latest` - 最新稳定版本
+- `x.y.z` - 特定版本
+- `x.y` - 小版本最新补丁
+- `x` - 主要版本的最新次要版本
 
-## Links
+## 链接
 
 - [GitHub Repository](https://github.com/weishaw/sub2api)
 - [Documentation](https://github.com/weishaw/sub2api#readme)

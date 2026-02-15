@@ -1,63 +1,63 @@
-# Pinia Stores Documentation
+# Pinia 商店文档
 
-This directory contains all Pinia stores for the Sub2API frontend application.
+该目录包含 Sub2API 前端应用程序的所有 Pinia 存储。
 
-## Stores Overview
+## 商店概览
 
-### 1. Auth Store (`auth.ts`)
+### 1.授权商店 (`auth.ts`)
 
-Manages user authentication state, login/logout, and token persistence.
+管理用户身份验证状态、登录/注销和令牌持久性。
 
-**State:**
+**状态：**
 
-- `user: User | null` - Current authenticated user
-- `token: string | null` - JWT authentication token
+- `user: User | null` - 当前经过身份验证的用户
+- `token: string | null` - JWT 身份验证令牌
 
-**Computed:**
+**计算：**
 
-- `isAuthenticated: boolean` - Whether user is currently authenticated
+- `isAuthenticated: boolean` - 用户当前是否已通过身份验证
 
-**Actions:**
+**行动：**
 
-- `login(credentials)` - Authenticate user with username/password
-- `register(userData)` - Register new user account
-- `logout()` - Clear authentication and logout
-- `checkAuth()` - Restore session from localStorage
-- `refreshUser()` - Fetch latest user data from server
+- `login(credentials)` - 使用用户名/密码验证用户
+- `register(userData)` - 注册新用户帐户
+- `logout()` - 清除身份验证和注销
+- `checkAuth()` - 从本地存储恢复会话
+- `refreshUser()` - 从服务器获取最新的用户数据
 
-### 2. App Store (`app.ts`)
+### 2. 应用商店 (`app.ts`)
 
-Manages global UI state including sidebar, loading indicators, and toast notifications.
+管理全局 UI 状态，包括侧边栏、加载指示器和 toast 通知。
 
-**State:**
+**状态：**
 
-- `sidebarCollapsed: boolean` - Sidebar collapsed state
-- `loading: boolean` - Global loading state
-- `toasts: Toast[]` - Active toast notifications
+- `sidebarCollapsed: boolean` - 侧边栏折叠状态
+- `loading: boolean` - 全局加载状态
+- `toasts: Toast[]` - 活动 toast 通知
 
-**Computed:**
+**计算：**
 
-- `hasActiveToasts: boolean` - Whether any toasts are active
+- `hasActiveToasts: boolean` - 是否有任何 toast 处于活动状态
 
-**Actions:**
+**行动：**
 
-- `toggleSidebar()` - Toggle sidebar state
-- `setSidebarCollapsed(collapsed)` - Set sidebar state explicitly
-- `setLoading(isLoading)` - Set loading state
-- `showToast(type, message, duration?)` - Show toast notification
-- `showSuccess(message, duration?)` - Show success toast
-- `showError(message, duration?)` - Show error toast
-- `showInfo(message, duration?)` - Show info toast
-- `showWarning(message, duration?)` - Show warning toast
-- `hideToast(id)` - Hide specific toast
-- `clearAllToasts()` - Clear all toasts
-- `withLoading(operation)` - Execute async operation with loading state
-- `withLoadingAndError(operation, errorMessage?)` - Execute with loading and error handling
-- `reset()` - Reset store to defaults
+- `toggleSidebar()` - 切换侧边栏状态
+- `setSidebarCollapsed(collapsed)` - 显式设置侧边栏状态
+- `setLoading(isLoading)` - 设置加载状态
+- `showToast(type, message, duration?)` - 显示 toast 通知
+- `showSuccess(message, duration?)` - 显示成功祝酒词
+- `showError(message, duration?)` - 显示错误 toast
+- `showInfo(message, duration?)` - 显示信息 toast
+- `showWarning(message, duration?)` - 显示警告 toast
+- `hideToast(id)` - 隐藏特定的 toast
+- `clearAllToasts()` - 清除所有 toast
+- `withLoading(operation)` - 在加载状态下执行异步操作
+- `withLoadingAndError(operation, errorMessage?)` - 执行加载和错误处理
+- `reset()` - 将存储重置为默认值
 
-## Usage Examples
+## 用法示例
 
-### Auth Store
+### 授权商店
 
 ```typescript
 import { useAuthStore } from '@/stores'
@@ -85,7 +85,7 @@ if (authStore.isAuthenticated) {
 authStore.logout()
 ```
 
-### App Store
+### 应用商店
 
 ```typescript
 import { useAppStore } from '@/stores'
@@ -120,7 +120,7 @@ const toastId = appStore.showToast('info', 'Custom message', undefined) // No au
 appStore.hideToast(toastId)
 ```
 
-### Combined Usage in Vue Component
+### Vue 组件中的组合使用
 
 ```vue
 <script setup lang="ts">
@@ -169,24 +169,24 @@ async function handleLogout() {
 </template>
 ```
 
-## Persistence
+## 坚持
 
-- **Auth Store**: Token and user data are automatically persisted to `localStorage`
-  - Keys: `auth_token`, `auth_user`
-  - Restored on `checkAuth()` call
-- **App Store**: No persistence (UI state resets on page reload)
+- **Auth Store**：令牌和用户数据自动保存到 `localStorage`
+- 键：`auth_token`、`auth_user`
+- 在 `checkAuth()` 调用时恢复
+- **App Store**：无持久性（UI 状态在页面重新加载时重置）
 
-## TypeScript Support
+## TypeScript 支持
 
-All stores are fully typed with TypeScript. Import types from `@/types`:
+所有商店都完全使用 TypeScript 进行打字。从 `@/types` 导入类型：
 
 ```typescript
 import type { User, Toast, ToastType } from '@/types'
 ```
 
-## Testing
+## 测试
 
-Stores can be reset to initial state:
+商店可以重置为初始状态：
 
 ```typescript
 // Auth store

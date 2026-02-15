@@ -1,29 +1,29 @@
-# Common Components
+# 常用组件
 
-This directory contains reusable Vue 3 components built with Composition API, TypeScript, and TailwindCSS.
+该目录包含使用 Composition API、TypeScript 和 TailwindCSS 构建的可重用 Vue 3 组件。
 
 ## Components
 
-### DataTable.vue
+### 数据表.vue
 
-A generic data table component with sorting, loading states, and custom cell rendering.
+具有排序、加载状态和自定义单元格渲染功能的通用数据表组件。
 
-**Props:**
+**道具：**
 
-- `columns: Column[]` - Array of column definitions with key, label, sortable, and formatter
-- `data: any[]` - Array of data objects to display
-- `loading?: boolean` - Show loading skeleton
-- `defaultSortKey?: string` - Default sort key (only used if no persisted sort state)
-- `defaultSortOrder?: 'asc' | 'desc'` - Default sort order (default: `asc`)
-- `sortStorageKey?: string` - Persist sort state (key + order) to localStorage
-- `rowKey?: string | (row: any) => string | number` - Row key field or resolver (defaults to `row.id`, falls back to index)
+- `columns: Column[]` - 具有键、标签、可排序和格式化程序的列定义数组
+- `data: any[]` - 要显示的数据对象数组
+- `loading?: boolean` - 显示加载骨架
+- `defaultSortKey?: string` - 默认排序键（仅在没有持久排序状态时使用）
+- `defaultSortOrder?: 'asc' | 'desc'` - 默认排序顺序（默认：`asc`）
+- `sortStorageKey?: string` - 将排序状态（键+顺序）保留到 localStorage
+- `rowKey?: string | (row: any) => string | number` - 行键字段或解析器（默认为 `row.id`，回退到索引）
 
-**Slots:**
+**插槽：**
 
-- `empty` - Custom empty state content
-- `cell-{key}` - Custom cell renderer for specific column (receives `row` and `value`)
+- `empty` - 自定义空状态内容
+- `cell-{key}` - 特定列的自定义单元格渲染器（接收 `row` 和 `value`）
 
-**Usage:**
+**用法：**
 
 ```vue
 <DataTable
@@ -43,23 +43,23 @@ A generic data table component with sorting, loading states, and custom cell ren
 
 ---
 
-### Pagination.vue
+### 分页.vue
 
-Pagination component with page numbers, navigation, and page size selector.
+带有页码、导航和页面大小选择器的分页组件。
 
-**Props:**
+**道具：**
 
-- `total: number` - Total number of items
-- `page: number` - Current page (1-indexed)
-- `pageSize: number` - Items per page
-- `pageSizeOptions?: number[]` - Available page size options (default: [10, 20, 50, 100])
+- `total: number` - 项目总数
+- `page: number` - 当前页面（1 索引）
+- `pageSize: number` - 每页项目数
+- `pageSizeOptions?: number[]` - 可用页面大小选项（默认值：[10, 20, 50, 100]）
 
-**Events:**
+**活动：**
 
-- `update:page` - Emitted when page changes
-- `update:pageSize` - Emitted when page size changes
+- `update:page` - 页面更改时发出
+- `update:pageSize` - 页面大小更改时发出
 
-**Usage:**
+**用法：**
 
 ```vue
 <Pagination
@@ -73,28 +73,28 @@ Pagination component with page numbers, navigation, and page size selector.
 
 ---
 
-### Modal.vue
+### 模态.vue
 
-Modal dialog with customizable size and close behavior.
+具有可定制大小和关闭行为的模态对话框。
 
-**Props:**
+**道具：**
 
-- `show: boolean` - Control modal visibility
-- `title: string` - Modal title
-- `size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'` - Modal size (default: 'md')
-- `closeOnEscape?: boolean` - Close on Escape key (default: true)
-- `closeOnClickOutside?: boolean` - Close on backdrop click (default: true)
+- `show: boolean` - 控制模态可见性
+- `title: string` - 模态标题
+- `size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'` - 模态尺寸（默认值：'md'）
+- `closeOnEscape?: boolean` - 按 Escape 键关闭（默认值：true）
+- `closeOnClickOutside?: boolean` - 在背景单击时关闭（默认值：true）
 
-**Events:**
+**活动：**
 
-- `close` - Emitted when modal should close
+- `close` - 当模态应该关闭时发出
 
-**Slots:**
+**插槽：**
 
-- `default` - Modal body content
-- `footer` - Modal footer content
+- `default` - 模态主体内容
+- `footer` - 模态页脚内容
 
-**Usage:**
+**用法：**
 
 ```vue
 <Modal :show="showModal" title="Edit User" size="lg" @close="showModal = false">
@@ -111,25 +111,25 @@ Modal dialog with customizable size and close behavior.
 
 ---
 
-### ConfirmDialog.vue
+### 确认对话框.vue
 
-Confirmation dialog built on top of Modal component.
+确认对话框构建在模态组件之上。
 
-**Props:**
+**道具：**
 
-- `show: boolean` - Control dialog visibility
-- `title: string` - Dialog title
-- `message: string` - Confirmation message
-- `confirmText?: string` - Confirm button text (default: 'Confirm')
-- `cancelText?: string` - Cancel button text (default: 'Cancel')
-- `danger?: boolean` - Use danger/red styling (default: false)
+- `show: boolean` - 控制对话框可见性
+- `title: string` - 对话框标题
+- `message: string` - 确认消息
+- `confirmText?: string` - 确认按钮文本（默认值：“确认”）
+- `cancelText?: string` - 取消按钮文本（默认值：“取消”）
+- `danger?: boolean` - 使用危险/红色样式（默认值：false）
 
-**Events:**
+**活动：**
 
-- `confirm` - Emitted when user confirms
-- `cancel` - Emitted when user cancels
+- `confirm` - 用户确认时发出
+- `cancel` - 用户取消时发出
 
-**Usage:**
+**用法：**
 
 ```vue
 <ConfirmDialog
@@ -148,18 +148,18 @@ Confirmation dialog built on top of Modal component.
 
 ### StatCard.vue
 
-Statistics card component for displaying metrics with optional change indicators.
+统计卡组件，用于显示带有可选更改指示器的指标。
 
-**Props:**
+**道具：**
 
-- `title: string` - Card title
-- `value: number | string` - Main value to display
-- `icon?: Component` - Icon component
-- `change?: number` - Percentage change value
-- `changeType?: 'up' | 'down' | 'neutral'` - Change direction (default: 'neutral')
-- `formatValue?: (value) => string` - Custom value formatter
+- `title: string` - 卡标题
+- `value: number | string` - 要显示的主要值
+- `icon?: Component` - 图标组件
+- `change?: number` - 百分比变化值
+- `changeType?: 'up' | 'down' | 'neutral'` - 改变方向（默认值：“中性”）
+- `formatValue?: (value) => string` - 自定义值格式化程序
 
-**Usage:**
+**用法：**
 
 ```vue
 <StatCard title="Total Users" :value="1234" :icon="UserIcon" :change="12.5" change-type="up" />
@@ -169,9 +169,9 @@ Statistics card component for displaying metrics with optional change indicators
 
 ### Toast.vue
 
-Toast notification component that automatically displays toasts from the app store.
+Toast 通知组件，自动显示来自应用商店的 Toast。
 
-**Usage:**
+**用法：**
 
 ```vue
 <!-- Add once in App.vue or layout -->
@@ -201,14 +201,14 @@ appStore.addToast({
 
 ### LoadingSpinner.vue
 
-Simple animated loading spinner.
+简单的动画加载旋转器。
 
-**Props:**
+**道具：**
 
-- `size?: 'sm' | 'md' | 'lg' | 'xl'` - Spinner size (default: 'md')
-- `color?: 'primary' | 'secondary' | 'white' | 'gray'` - Spinner color (default: 'primary')
+- `size?: 'sm' | 'md' | 'lg' | 'xl'` - 微调器大小（默认值：'md'）
+- `color?: 'primary' | 'secondary' | 'white' | 'gray'` - 微调器颜色（默认值：“主要”）
 
-**Usage:**
+**用法：**
 
 ```vue
 <LoadingSpinner size="lg" color="primary" />
@@ -216,25 +216,25 @@ Simple animated loading spinner.
 
 ---
 
-### EmptyState.vue
+### 空状态.vue
 
-Empty state placeholder with icon, message, and optional action button.
+带有图标、消息和可选操作按钮的空状态占位符。
 
-**Props:**
+**道具：**
 
-- `icon?: Component` - Icon component
-- `title: string` - Empty state title
-- `description: string` - Empty state description
-- `actionText?: string` - Action button text
-- `actionTo?: string | object` - Router link destination
-- `actionIcon?: boolean` - Show plus icon in button (default: true)
+- `icon?: Component` - 图标组件
+- `title: string` - 空状态标题
+- `description: string` - 空状态描述
+- `actionText?: string` - 操作按钮文本
+- `actionTo?: string | object` - 路由器链接目的地
+- `actionIcon?: boolean` - 在按钮中显示加号图标（默认值：true）
 
-**Slots:**
+**插槽：**
 
-- `icon` - Custom icon content
-- `action` - Custom action button/link
+- `icon` - 自定义图标内容
+- `action` - 自定义操作按钮/链接
 
-**Usage:**
+**用法：**
 
 ```vue
 <EmptyState
@@ -247,13 +247,13 @@ Empty state placeholder with icon, message, and optional action button.
 
 ## Import
 
-You can import components individually:
+您可以单独导入组件：
 
 ```typescript
 import { DataTable, Pagination, Modal } from '@/components/common'
 ```
 
-Or import specific components:
+或者导入特定组件：
 
 ```typescript
 import DataTable from '@/components/common/DataTable.vue'
@@ -261,11 +261,11 @@ import DataTable from '@/components/common/DataTable.vue'
 
 ## Features
 
-All components include:
+所有组件包括：
 
-- **TypeScript support** with proper type definitions
-- **Accessibility** with ARIA attributes and keyboard navigation
-- **Responsive design** with mobile-friendly layouts
-- **TailwindCSS styling** for consistent design
-- **Vue 3 Composition API** with `<script setup>`
-- **Slot support** for customization
+- **TypeScript 支持** 具有正确的类型定义
+- **辅助功能**，具有 ARIA 属性和键盘导航
+- **响应式设计**，具有适合移动设备的布局
+- **TailwindCSS 样式**，实现一致的设计
+- **Vue 3 组合 API** 与 `<script setup>`
+- **插槽支持**用于定制

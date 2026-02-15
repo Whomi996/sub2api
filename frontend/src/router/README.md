@@ -1,72 +1,72 @@
-# Vue Router Configuration
+# Vue 路由器配置
 
 ## Overview
 
-This directory contains the Vue Router configuration for the Sub2API frontend application. The router implements a comprehensive navigation system with authentication guards, role-based access control, and lazy loading.
+该目录包含 Sub2API 前端应用程序的 Vue Router 配置。该路由器实现了一个全面的导航系统，具有身份验证防护、基于角色的访问控制和延迟加载。
 
-## Files
+## 文件
 
-- **index.ts**: Main router configuration with route definitions and navigation guards
-- **meta.d.ts**: TypeScript type definitions for route meta fields
+- **index.ts**：带有路由定义和导航防护的主路由器配置
+- **meta.d.ts**：路由元字段的 TypeScript 类型定义
 
-## Route Structure
+## 路由结构
 
-### Public Routes (No Authentication Required)
+### 公共路线（无需身份验证）
 
-| Path        | Component    | Description            |
+|路径|组件|描述 |
 | ----------- | ------------ | ---------------------- |
-| `/login`    | LoginView    | User login page        |
-| `/register` | RegisterView | User registration page |
+| `/login` |登录查看 |用户登录页面 |
+| `/register` |注册查看 |用户注册页面 |
 
-### User Routes (Authentication Required)
+### 用户路由（需要身份验证）
 
-| Path         | Component     | Description                  |
+|路径|组件|描述 |
 | ------------ | ------------- | ---------------------------- |
-| `/`          | -             | Redirects to `/dashboard`    |
-| `/dashboard` | DashboardView | User dashboard with stats    |
-| `/keys`      | KeysView      | API key management           |
-| `/usage`     | UsageView     | Usage records and statistics |
-| `/redeem`    | RedeemView    | Redeem code interface        |
-| `/profile`   | ProfileView   | User profile settings        |
+| `/` | - |重定向至 `/dashboard` |
+| `/dashboard` |仪表板视图 |带有统计信息的用户仪表板 |
+| `/keys` |按键视图 | API 密钥管理 |
+| `/usage` |使用情况查看 |使用记录及统计 |
+| `/redeem` |兑换查看 |兑换码界面 |
+| `/profile` |简介查看 |用户个人资料设置 |
 
-### Admin Routes (Admin Role Required)
+### 管理路由（需要管理员角色）
 
-| Path               | Component          | Description                     |
+|路径|组件|描述 |
 | ------------------ | ------------------ | ------------------------------- |
-| `/admin`           | -                  | Redirects to `/admin/dashboard` |
-| `/admin/dashboard` | AdminDashboardView | Admin dashboard                 |
-| `/admin/users`     | AdminUsersView     | User management                 |
-| `/admin/groups`    | AdminGroupsView    | Group management                |
-| `/admin/accounts`  | AdminAccountsView  | Account management              |
-| `/admin/proxies`   | AdminProxiesView   | Proxy management                |
-| `/admin/redeem`    | AdminRedeemView    | Redeem code management          |
+| `/admin` | - |重定向至 `/admin/dashboard` |
+| `/admin/dashboard` |管理仪表板视图 |管理仪表板 |
+| `/admin/users` |管理员用户查看|用户管理|
+| `/admin/groups` |管理组查看 |集团管理|
+| `/admin/accounts` |管理帐户视图 |账户管理 |
+| `/admin/proxies` | AdminProxies查看|代理管理|
+| `/admin/redeem` |管理员兑换查看 |兑换码管理 |
 
-### Special Routes
+### 特别路线
 
-| Path              | Component    | Description    |
+|路径|组件|描述 |
 | ----------------- | ------------ | -------------- |
-| `/:pathMatch(.*)` | NotFoundView | 404 error page |
+| `/:pathMatch(.*)` |未找到查看 | 404错误页面|
 
-## Navigation Guards
+## 导航卫士
 
-### Authentication Guard (beforeEach)
+### 身份验证防护（beforeEach）
 
-The router implements a comprehensive navigation guard that:
+路由器实现了全面的导航防护：
 
-1. **Sets Page Title**: Updates document title based on route meta
-2. **Checks Authentication**:
-   - Public routes (`requiresAuth: false`) are accessible without login
-   - Protected routes require authentication
-   - Redirects to `/login` if not authenticated
-3. **Prevents Double Login**:
-   - Redirects authenticated users away from login/register pages
-4. **Role-Based Access Control**:
-   - Admin routes (`requiresAdmin: true`) require admin role
-   - Non-admin users are redirected to `/dashboard`
-5. **Preserves Intended Destination**:
-   - Saves original URL in query parameter for post-login redirect
+1. **设置页面标题**：根据路由元更新文档标题
+2. **检查身份验证**：
+- 无需登录即可访问公共路线（`requiresAuth: false`）
+- 受保护的路由需要身份验证
+- 如果未通过身份验证，则重定向到 `/login`
+3. **防止双重登录**：
+- 将经过身份验证的用户重定向到登录/注册页面
+4. **基于角色的访问控制**：
+- 管理路由 (`requiresAdmin: true`) 需要管理员角色
+- 非管理员用户被重定向到 `/dashboard`
+5. **保留预定目的地**：
+- 在查询参数中保存原始 URL 以用于登录后重定向
 
-### Flow Diagram
+### 流程图
 
 ```
 User navigates to route
@@ -86,9 +86,9 @@ Requires admin role? ──Yes──→ Is user admin? ──No──→ Redirec
 Allow access ←────────────────────────────────┘
 ```
 
-## Route Meta Fields
+## 路由元字段
 
-Each route can define the following meta fields:
+每个路由可以定义以下元字段：
 
 ```typescript
 interface RouteMeta {
@@ -105,24 +105,24 @@ interface RouteMeta {
 }
 ```
 
-## Lazy Loading
+## 延迟加载
 
-All route components use dynamic imports for code splitting:
+所有路由组件都使用动态导入进行代码分割：
 
 ```typescript
 component: () => import('@/views/user/DashboardView.vue')
 ```
 
-Benefits:
+好处：
 
-- Reduced initial bundle size
-- Faster initial page load
-- Components loaded on-demand
-- Automatic code splitting by Vite
+- 减少初始包大小
+- 更快的初始页面加载
+- 按需加载组件
+- Vite自动代码分割
 
-## Authentication Store Integration
+## 身份验证存储集成
 
-The router integrates with the Pinia auth store (`@/stores/auth`):
+路由器与 Pinia auth store 集成 (`@/stores/auth`)：
 
 ```typescript
 const authStore = useAuthStore()
@@ -134,9 +134,9 @@ authStore.isAuthenticated
 authStore.isAdmin
 ```
 
-## Usage Examples
+## 用法示例
 
-### Programmatic Navigation
+### 程序化导航
 
 ```typescript
 import { useRouter } from 'vue-router'
@@ -156,7 +156,7 @@ router.push({
 router.push('/admin/users')
 ```
 
-### Route Links
+### 路线链接
 
 ```vue
 <template>
@@ -171,7 +171,7 @@ router.push('/admin/users')
 </template>
 ```
 
-### Checking Current Route
+### 检查当前路由
 
 ```typescript
 import { useRoute } from 'vue-router'
@@ -185,17 +185,17 @@ const isAdminPage = route.path.startsWith('/admin')
 const requiresAdmin = route.meta.requiresAdmin
 ```
 
-## Scroll Behavior
+## 滚动行为
 
-The router implements automatic scroll management:
+路由器实现自动滚动管理：
 
-- **Browser Navigation**: Restores saved scroll position
-- **New Routes**: Scrolls to top of page
-- **Hash Links**: Scrolls to anchor (when implemented)
+- **浏览器导航**：恢复保存的滚动位置
+- **新路线**：滚动到页面顶部
+- **散列链接**：滚动到锚点（实施时）
 
-## Error Handling
+## 错误处理
 
-The router includes error handling for navigation failures:
+路由器包括导航失败的错误处理：
 
 ```typescript
 router.onError((error) => {
@@ -203,29 +203,29 @@ router.onError((error) => {
 })
 ```
 
-## Testing Routes
+## 测试路线
 
-To test navigation guards and route access:
+要测试导航防护和路线访问：
 
-1. **Public Route Access**: Visit `/login` without authentication
-2. **Protected Route**: Try accessing `/dashboard` without login (should redirect)
-3. **Admin Access**: Login as regular user, try `/admin/users` (should redirect to dashboard)
-4. **Admin Success**: Login as admin, access `/admin/users` (should succeed)
-5. **404 Handling**: Visit non-existent route (should show 404 page)
+1. **公共路由访问**：无需认证即可访问`/login`
+2. **受保护的路由**：尝试在不登录的情况下访问 `/dashboard` （应重定向）
+3. **管理员访问**：以普通用户身份登录，尝试 `/admin/users` （应重定向到仪表板）
+4. **管理员成功**：以管理员身份登录，访问`/admin/users`（应该成功）
+5. **404处理**：访问不存在的路由（应显示404页面）
 
-## Development Tips
+## 开发技巧
 
-### Adding New Routes
+### 添加新路线
 
-1. Add route definition in `routes` array
-2. Create corresponding view component
-3. Set appropriate meta fields (`requiresAuth`, `requiresAdmin`)
-4. Use lazy loading with `() => import()`
-5. Update this README with route documentation
+1. 在`routes`数组中添加路由定义
+2.创建对应的视图组件
+3. 设置适当的元字段（`requiresAuth`、`requiresAdmin`）
+4. 使用 `() => import()` 进行延迟加载
+5. 使用路线文档更新此自述文件
 
-### Debugging Navigation
+### 调试导航
 
-Enable Vue Router debug mode:
+启用 Vue Router 调试模式：
 
 ```typescript
 // In browser console
@@ -235,42 +235,42 @@ window.__VUE_ROUTER__ = router
 router.currentRoute.value
 ```
 
-### Common Issues
+### 常见问题
 
-**Issue**: 404 on page refresh
+**问题**：页面刷新 404
 
-- **Cause**: Server not configured for SPA
-- **Solution**: Configure server to serve `index.html` for all routes
+- **原因**：服务器未配置 SPA
+- **解决方案**：配置服务器为所有路由提供 `index.html` 服务
 
-**Issue**: Navigation guard runs twice
+**问题**：导航守卫运行两次
 
-- **Cause**: Multiple `next()` calls
-- **Solution**: Ensure only one `next()` call per code path
+- **原因**：多次 `next()` 调用
+- **解决方案**：确保每个代码路径仅调用一次 `next()`
 
-**Issue**: User data not loaded
+**问题**：用户数据未加载
 
-- **Cause**: Auth store not initialized
-- **Solution**: Call `authStore.checkAuth()` in App.vue or main.ts
+- **原因**：身份验证存储未初始化
+- **解决方案**：在App.vue或main.ts中调用`authStore.checkAuth()`
 
-## Security Considerations
+## 安全考虑
 
-1. **Client-Side Only**: Navigation guards are client-side; server must also validate
-2. **Token Validation**: API should verify JWT token on every request
-3. **Role Checking**: Backend must verify admin role, not just frontend
-4. **XSS Protection**: Vue automatically escapes template content
-5. **CSRF Protection**: Use CSRF tokens for state-changing operations
+1. **Client-Side Only**：导航守卫是客户端；服务器还必须验证
+2. **令牌验证**：API 应在每个请求上验证 JWT 令牌
+3. **角色检查**：后端必须验证管理员角色，而不仅仅是前端
+4. **XSS防护**：Vue自动转义模板内容
+5. **CSRF保护**：使用CSRF令牌进行状态更改操作
 
-## Performance Optimization
+## 性能优化
 
-1. **Lazy Loading**: All routes use dynamic imports
-2. **Code Splitting**: Vite automatically splits route chunks
-3. **Prefetching**: Consider adding route prefetch for common paths
-4. **Route Caching**: Vue Router caches component instances
+1. **延迟加载**：所有路由都使用动态导入
+2. **代码分割**：Vite自动分割路由块
+3. **预取**：考虑为公共路径添加路由预取
+4. **路由缓存**：Vue Router 缓存组件实例
 
-## Future Enhancements
+## 未来的增强
 
-- [ ] Add breadcrumb navigation system
-- [ ] Implement route-based permissions beyond admin/user
-- [ ] Add route transition animations
-- [ ] Implement route prefetching for anticipated navigation
-- [ ] Add navigation analytics tracking
+- [ ] 添加面包屑导航系统
+- [ ] 实现管理员/用户之外的基于路由的权限
+- [ ] 添加路线过渡动画
+- [ ] 为预期导航实现路线预取
+- [ ] 添加导航分析跟踪
